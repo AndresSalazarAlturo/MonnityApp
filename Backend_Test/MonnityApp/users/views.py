@@ -1,33 +1,49 @@
 """Users views"""
 ###Django
-#from django.contrib.auth.forms import UserCreationForm
-#from django.urls import reverse_lazy
-#from django.views import generic
+#from django.shortcuts import render
+#from django.contrib.auth import login, authenticate
+#from .forms import SignUpForm
+#from django.shortcuts import render, redirect
 #
 #
-#class SignUpView(generic.CreateView):
-#    form_class = UserCreationForm
-#    success_url = reverse_lazy('login')
-#    template_name = 'registration/signup.html'
+#def signup_view(request):
+#    form = SignUpForm(request.POST)
+#    if form.is_valid():
+#        form.save()
+#        username = form.cleaned_data.get('username')
+#        password = form.cleaned_data.get('password1')
+#        user = authenticate(username=username, password=password)
+#        login(request, user)
+#        return redirect('home')
+#    else:
+#        form = SignUpForm()
+#    return render(request, 'signup.html', {'form': form})
+#
+####Anterior funciona######
 
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from .forms import SignUpForm
 from django.shortcuts import render, redirect
 
-# def home_view(request):
-#    return render(request, 'home')
-
 def signup_view(request):
-    form = UserCreationForm(request.POST)
+    form = SignUpForm(request.POST)
     if form.is_valid():
-        form.save()
+        user = form.save()
+        user.refresh_from_db()
+        user.profile.first_name = form.cleaned_data.get('first_name')
+        user.profile.last_name = form.cleaned_data.get('last_name')
+        user.profile.email = form.cleaned_data.get('email')
+        user.save()
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password1')
         user = authenticate(username=username, password=password)
         login(request, user)
         return redirect('home')
+    else:
+        form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
+
 
 
 
