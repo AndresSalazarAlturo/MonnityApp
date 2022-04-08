@@ -20,11 +20,16 @@
 #    return render(request, 'signup.html', {'form': form})
 #
 ####Anterior funciona######
-
-from django.shortcuts import render
+##Django
 from django.contrib.auth import login, authenticate
+from django.urls import reverse_lazy
 from .forms import SignUpForm
 from django.shortcuts import render, redirect
+from django.views import generic
+from django.contrib.auth.forms import UserChangeForm
+
+def home(request):
+    return render(request, 'home')
 
 def signup_view(request):
     form = SignUpForm(request.POST)
@@ -44,7 +49,12 @@ def signup_view(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
+class UserEditView(generic.UpdateView):
+    form_class = UserChangeForm
+    template_name = './updateUser.html'
+    success_url = reverse_lazy('home')
 
-
+    def get_object(self):
+        return self.request.user
 
 

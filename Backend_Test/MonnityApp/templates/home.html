@@ -10,6 +10,7 @@
     Lastname: {{ user.last_name }}<br>
     email: {{ user.email }}
   </p>
+  <a href="{% url 'profileupdate' %}">Update your data!</a><br>
   <p><a href="{% url 'logout' %}">Log Out</a></p>
 {% else %}
   <p>You are not logged in</p>
@@ -17,4 +18,6 @@
   <p>If you don't have account yet, please create it now!!</p>
   <a href="{% url 'signup' %}">Sign Up</a>
 {% endif %}
+
 {% endblock %}
+
